@@ -14,25 +14,26 @@ class Form extends Component {
         this.handleProductNameInput = this.handleProductNameInput.bind(this);
         this.handlePriceInput = this.handlePriceInput.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
-    }
-
-    handleImgInput(event) {
-        this.setState({
-            image_url: event.target.value
-        })
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleProductNameInput(event) {
         this.setState({
             product_name: event.target.value
         })
-    }
+    };
 
     handlePriceInput(event) {
         this.setState({
             price: event.target.value
         })
-    }
+    };
+
+    handleImgInput(event) {
+        this.setState({
+            image_url: event.target.value
+        })
+    };
 
     handleCancel() {
         document.querySelectorAll('input');
@@ -41,29 +42,30 @@ class Form extends Component {
             price: "",
             image_url: ""
         })
-    }
+    };
 
-    createProduct = (productName, price, imageUrl) => {
-        axios.post('/api/product', {productName, price, imageUrl}).then(
-          res => {
+    handleSubmit = () => {
+        const { product_name, price, image_url } = this.state;
+        axios.post('/api/product', {product_name, price, image_url}).then( res => {
             this.setState({
-              products: res.data,
+                product_name,
+                price,
+                image_url
             })
             this.props.getInventory();
             this.handleCancel();
-          }).catch(err => console.log(err))
-      }
+        }).catch(err => console.log(err))
+    }
     
 
     render() {
-        const { product_name, price, image_url } = this.state;
         return (
         <div>
-            <input type="text" value={this.state.image_url} onChange={this.handleImgInput} />
             <input type="text" value={this.state.product_name} onChange={this.handleProductNameInput} />
             <input type="text" value={this.state.price} onChange={this.handlePriceInput} />
+            <input type="text" value={this.state.image_url} onChange={this.handleImgInput} />
             <button onClick={this.handleCancel}> Cancel </button>
-            <button onClick={(e) => this.createProduct()}> Add to Inventory </button>
+            <button onClick={(e) => this.handleSubmit()}> Add to Inventory </button>
         </div>
         )
     }
